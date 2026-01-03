@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+//import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Mass;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,4 +20,28 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static final double MAX_SPEED = 0;
+
+  public static Translation2d flLocation;
+  public static Translation2d frLocation;
+  public static Translation2d blLocation;
+  public static Translation2d brLocation;
+
+  //CAN IDs
+
+  public static final int armEncoderID = 0;
+
+  public static final Mass robotmass = null;
+  public static int armCanID;
+
+  public static double trackY;
+
+  public static double trackX;
+
+  public static double bumperY;
+
+  public static double bumperX;
+
+  public static double robotMass;
 }

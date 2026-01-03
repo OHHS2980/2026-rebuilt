@@ -1,45 +1,31 @@
 package frc.robot.subsystems.Arm;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Arm.ArmIO.ArmIOInputs;
 
 public class Arm extends SubsystemBase {
         
     ArmIO armIO;
 
-    public Arm(ArmIO armIO)
+    public ArmIOInputs armIOInputs = new ArmIOInputs();
+
+    public Arm(ArmIO armIO,
+        double kP, double kI, double kD, 
+        double kS, double kG, double kV, double kA
+    )
+
     {
         this.armIO = armIO;
+        armIO.configurePIDF(kP, kI, kD, kS, kG, kV, kA);
     }
 
-    class moveArm90degreesyay extends Command
-    {
-        public void initialize()
-        {
-            armIO.setSetPoint(90);
-        }
-
-        public void execute()
-        {
-            armIO.update();
-        }
-
-        public boolean isFinished()
-        {
-            if (Math.abs(armIO.getAngleFromPosition() - 90) < 2.5)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public void end(boolean isFinished)
-        {
-            armIO.setMotor(0);
-        }
-    }
-
+    
+    
+    @Override
     public void periodic()
     {
+        armIO.updateInputs(armIOInputs);
         
+        armIO.update(armIOInputs);
     }
 }

@@ -1,14 +1,10 @@
-package frc.robot.subsystems.Arm;
+package frc.robot.subsystems.Elevator;
 
 import org.littletonrobotics.junction.AutoLog;
-import org.littletonrobotics.junction.AutoLogOutput;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-
-public interface ArmIO
-{
-
-    @AutoLog
+public interface ElevatorIO {
+    
+        @AutoLog
     public static class ArmIOInputs {
 
         public double voltage = 0;
