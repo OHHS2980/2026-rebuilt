@@ -41,30 +41,17 @@ public class ModuleIOSim implements ModuleIO {
 
     public int moduleNumber;
 
-    public ModuleIOSim(SwerveModuleSimulation moduleSim, int moduleNumber)
+    public ModuleIOSim(SwerveModuleSimulation driveModuleSim, int moduleNumber)
     {
         feedforward = new SimpleMotorFeedforward(0.1, 0.15);
 
-        config = new SwerveModuleSimulationConfig
-        (
-            DCMotor.getNEO(1), // Drive motor (neo?)
-            DCMotor.getNEO(1), // Steer motor (neo)
-            Constants.driveGearRatio, // Drive motor gear ratio
-            Constants.turnGearRatio, // Steer motor gear ratio
-            Volts.of(0.1), // Drive friction voltage.
-            Volts.of(0.1), // Steer friction voltage
-            Inches.of(2), // Wheel radius
-            KilogramSquareMeters.of(0.03), // Steer MOI
-            1.2
-        ); // Wheel COF
         
 
-        moduleSim = new SwerveModuleSimulation(config);
+        this.moduleSim = driveModuleSim;
 
         driveMotor = moduleSim.useGenericMotorControllerForDrive();
         turnMotor = moduleSim.useGenericControllerForSteer();
 
-        this.moduleSim = moduleSim;
         this.moduleNumber = moduleNumber;
 
     }

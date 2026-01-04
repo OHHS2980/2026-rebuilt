@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
 
 import static edu.wpi.first.units.Units.Inches;
@@ -17,7 +18,10 @@ import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -29,18 +33,18 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  XboxController controller;
+  PS5Controller controller;
 
   Drive drive;
 
   SwerveDriveSimulation driveSim;
   final DriveTrainSimulationConfig driveSimConfig = DriveTrainSimulationConfig.Default()
         // Specify gyro type (for realistic gyro drifting and error simulation)
-        .withGyro(COTS.ofPigeon2())
+        .withGyro(COTS.ofNav2X())
         // Specify swerve module (for realistic swerve dynamics)
         .withSwerveModule(COTS.ofMark4(
                 DCMotor.getKrakenX60(1), // Drive motor is a Kraken X60
-                DCMotor.getFalcon500(1), // Steer motor is a Falcon 500
+                DCMotor.getKrakenX60(1), // Steer motor is a Falcon 500
                 COTS.WHEELS.COLSONS.cof, // Use the COF for Colson Wheels
                 3)) // L3 Gear ratio
         // Configures the track length and track width (spacing between swerve modules)
@@ -58,11 +62,11 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
 
-    controller = new XboxController(0);
+    controller = new PS5Controller(0);
 
     this.driveSim = new SwerveDriveSimulation(
       driveSimConfig,
-      new Pose2d()
+      RobotState.getInstance().getPose()
     );
 
     this.drive = new Drive(
@@ -70,6 +74,7 @@ public class RobotContainer {
       new ModuleIOSim(driveSim.getModules()[1],1),
       new ModuleIOSim(driveSim.getModules()[2],2),
       new ModuleIOSim(driveSim.getModules()[3],3),
+      new GyroIOSim(driveSim.getGyroSimulation()),
       0.1, 0.1, 0.1
     );
 

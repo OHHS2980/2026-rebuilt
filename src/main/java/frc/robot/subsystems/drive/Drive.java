@@ -2,6 +2,9 @@ package frc.robot.subsystems.drive;
 
 import java.util.function.DoubleSupplier;
 
+import org.ironmaple.simulation.drivesims.GyroSimulation;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -26,6 +29,8 @@ public class Drive extends SubsystemBase {
 
     public SwerveDriveKinematics kinematics;
 
+    public SwerveDriveSimulation driveSim;
+
     public SwerveDriveOdometry odometry;
 
     public GyroIO gyroIO;
@@ -45,7 +50,7 @@ public class Drive extends SubsystemBase {
       ModuleIO frModuleIO,
       ModuleIO blModuleIO,
       ModuleIO brModuleIO,
-
+      GyroIO gyroIO,
       double kP, double kI, double kD
     ) {
 
@@ -53,6 +58,8 @@ public class Drive extends SubsystemBase {
         frModule = new Module(frModuleIO, kP, kI, kD);
         blModule = new Module(blModuleIO, kP, kI, kD);
         brModule = new Module(brModuleIO, kP, kI, kD);
+
+        this.gyroIO = gyroIO;
 
         modules[0] = flModule;
         modules[1] = frModule;
@@ -68,7 +75,7 @@ public class Drive extends SubsystemBase {
 
         odometry = new SwerveDriveOdometry(
             kinematics, 
-            new Rotation2d(0,0), 
+            gyroIO.getHeading(), 
             new SwerveModulePosition[] 
             {
                 flModule.getPosition(),
