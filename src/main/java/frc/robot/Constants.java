@@ -23,10 +23,10 @@ public final class Constants {
 
   public static final double MAX_SPEED = 0;
 
-  public static Translation2d flLocation;
-  public static Translation2d frLocation;
-  public static Translation2d blLocation;
-  public static Translation2d brLocation;
+  public static Translation2d flLocation = new Translation2d(-5,5);
+  public static Translation2d frLocation = new Translation2d(5,5);
+  public static Translation2d blLocation = new Translation2d(-5,-5);
+  public static Translation2d brLocation = new Translation2d(5,-5);
 
   //CAN IDs
 
@@ -44,4 +44,10 @@ public final class Constants {
   public static double bumperX;
 
   public static double robotMass;
+
+  public static int swerveWheelCircumference;
+
+  public static double driveGearRatio = 6;
+
+  public static double turnGearRatio = 6;
 }

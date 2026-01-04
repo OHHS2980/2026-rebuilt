@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -14,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.subsystems.drive.module.Module;
 
 import frc.robot.subsystems.drive.module.ModuleIO;
@@ -25,7 +26,17 @@ public class Drive extends SubsystemBase {
 
     public SwerveDriveKinematics kinematics;
 
+    public SwerveDriveOdometry odometry;
+
+    public GyroIO gyroIO;
+
+    public Module flModule, frModule, blModule, brModule;
+
+    public Module[] modules = {flModule, frModule, blModule, brModule};
+
     public SwerveModuleState[] moduleStates = new SwerveModuleState[4];
+
+    public SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
 
     public Pose2d pose = new Pose2d();
 
@@ -33,12 +44,20 @@ public class Drive extends SubsystemBase {
       ModuleIO flModuleIO,
       ModuleIO frModuleIO,
       ModuleIO blModuleIO,
-      ModuleIO brModuleIO) {
+      ModuleIO brModuleIO,
 
-        flModule = new Module(flModuleIO);
-        frModule = new Module(frModuleIO);
-        blModule = new Module(blModuleIO);
-        frModule = new Module(brModuleIO);
+      double kP, double kI, double kD
+    ) {
+
+        flModule = new Module(flModuleIO, kP, kI, kD);
+        frModule = new Module(frModuleIO, kP, kI, kD);
+        blModule = new Module(blModuleIO, kP, kI, kD);
+        brModule = new Module(brModuleIO, kP, kI, kD);
+
+        modules[0] = flModule;
+        modules[1] = frModule;
+        modules[2] = blModule;
+        modules[3] = brModule;
 
         kinematics = new SwerveDriveKinematics(
             Constants.flLocation,
@@ -47,10 +66,38 @@ public class Drive extends SubsystemBase {
             Constants.brLocation
         );
 
+        odometry = new SwerveDriveOdometry(
+            kinematics, 
+            new Rotation2d(0,0), 
+            new SwerveModulePosition[] 
+            {
+                flModule.getPosition(),
+                frModule.getPosition(),
+                blModule.getPosition(),
+                brModule.getPosition()
+            }
+        );
 
     }
 
-    public Module flModule, frModule, blModule, brModule;
+
+    public Pose2d getOdomPose()
+    {
+
+        
+        odometry.update(
+            new Rotation2d(), 
+            new SwerveModulePosition[] 
+            {
+                flModule.getPosition(),
+                frModule.getPosition(),
+                blModule.getPosition(),
+                brModule.getPosition()
+            }
+        );
+
+        return odometry.getPoseMeters();
+    }
 
     public void updateModuleStates()
     {
@@ -75,11 +122,12 @@ public class Drive extends SubsystemBase {
     //fr - 2
     //bl - 3
     //br - 4
-    public Module[] modules = {flModule, frModule, blModule, brModule};
 
     @Override
     public void periodic()
     {
+        RobotState.getInstance().setPose(getOdomPose());
+
         updateModuleSpeeds();
     }
 

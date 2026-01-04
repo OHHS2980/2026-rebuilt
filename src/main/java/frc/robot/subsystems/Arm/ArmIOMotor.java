@@ -1,17 +1,10 @@
 package frc.robot.subsystems.Arm;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.AbsoluteEncoder;
-
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import frc.robot.util.SparkUtil;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
 
 public class ArmIOMotor implements ArmIO

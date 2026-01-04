@@ -4,21 +4,20 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
 
 import static edu.wpi.first.units.Units.Inches;
 
+import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -30,12 +29,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
+  XboxController controller;
+
   Drive drive;
 
   SwerveDriveSimulation driveSim;
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
   final DriveTrainSimulationConfig driveSimConfig = DriveTrainSimulationConfig.Default()
         // Specify gyro type (for realistic gyro drifting and error simulation)
         .withGyro(COTS.ofPigeon2())
@@ -51,13 +49,16 @@ public class RobotContainer {
         .withBumperSize(Inches.of(30), Inches.of(30));
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  public void mapleSimSetup()
+  {
+   
+  }
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    configureBindings();
+
+    controller = new XboxController(0);
 
     this.driveSim = new SwerveDriveSimulation(
       driveSimConfig,
@@ -68,8 +69,14 @@ public class RobotContainer {
       new ModuleIOSim(driveSim.getModules()[0],0),
       new ModuleIOSim(driveSim.getModules()[1],1),
       new ModuleIOSim(driveSim.getModules()[2],2),
-      new ModuleIOSim(driveSim.getModules()[3],3)
+      new ModuleIOSim(driveSim.getModules()[3],3),
+      0.1, 0.1, 0.1
     );
+
+    configureBindings();
+    mapleSimSetup();
+
+
 
   }
 
@@ -84,7 +91,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-
+      drive.setDefaultCommand(
+        drive.driveFieldCentric
+        (
+          drive, 
+          () -> controller.getLeftX(),
+          () -> controller.getLeftY(),
+          () -> controller.getRightX()
+        )
+      );
   }
 
   /**
@@ -92,8 +107,4 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
 }

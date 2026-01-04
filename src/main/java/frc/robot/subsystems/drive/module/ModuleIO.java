@@ -1,8 +1,10 @@
 package frc.robot.subsystems.drive.module;
 
+import org.dyn4j.geometry.Rotation;
 import org.littletonrobotics.junction.AutoLog;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Distance;
 
 public interface ModuleIO {
 
@@ -41,6 +43,16 @@ public interface ModuleIO {
 
     public default void setTurnPosition(Rotation2d rotation) {}
 
-    public default void getTurnDegrees() {}
+    public default Rotation2d getTurnDegrees() 
+    {
+        return null;
+    }
+
+    public default Distance getDriveDistance() 
+    {
+        return null;
+    }
+
+    
 
 }

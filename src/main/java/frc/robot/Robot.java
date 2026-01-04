@@ -4,12 +4,24 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.LoggedRobot;
 
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.TimedRobot;
+import java.util.concurrent.Flow.Publisher;
+
+import org.ironmaple.simulation.SimulatedArena;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.PubSubOption;
+import edu.wpi.first.networktables.PubSubOptions;
+import edu.wpi.first.networktables.StructEntry;
+import edu.wpi.first.networktables.StructTopic;
+import edu.wpi.first.networktables.Topic;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -21,16 +33,32 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  RobotState robotState;
+
+  final NetworkTable table;
+
+  final StructEntry<Pose2d> poseEntry;
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    new RobotContainer();
+
+    Logger.start();
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+
+    table = inst.getTable("blud");
+
+    poseEntry = inst.getStructTopic("/blud/estimatedPose", Pose2d.struct).getEntry(
+      RobotState.getInstance().getPose(), 
+      PubSubOption.keepDuplicates(true)
+    );
+
+    robotState = RobotState.getInstance();
   }
 
 
@@ -50,6 +78,12 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    poseEntry.set(
+      RobotState.getInstance().getPose()
+    );
+
+    Logger.recordOutput("edoga", RobotState.getInstance().getPose());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -62,7 +96,6 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -101,9 +134,14 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+
+    SimulatedArena.getInstance();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+      SimulatedArena.getInstance().simulationPeriodic();
+  }
 }

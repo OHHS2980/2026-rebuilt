@@ -9,7 +9,7 @@ public class RobotState
 
     private static RobotState instance;
 
-    public Pose2d estimatedPose;
+    public Pose2d estimatedPose = new Pose2d();
 
     public Rotation2d getRotation()
     {
@@ -24,5 +24,14 @@ public class RobotState
     public Translation2d getPosition()
     {
         return estimatedPose.getTranslation();
+    }
+
+    public Pose2d getPose()
+    {
+        return estimatedPose;
+    }
+
+    public void setPose(Pose2d odomPose) {
+        estimatedPose = odomPose;
     }
 }
