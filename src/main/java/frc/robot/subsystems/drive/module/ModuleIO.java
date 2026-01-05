@@ -53,6 +53,11 @@ public interface ModuleIO {
         return null;
     }
 
+    public default double getDriveVelocity()
+    {
+        return 0;
+    }
+
     
 
 }

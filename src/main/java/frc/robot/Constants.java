@@ -45,7 +45,7 @@ public final class Constants {
 
   public static double robotMass;
 
-  public static int swerveWheelCircumference;
+  public static int swerveWheelCircumference = 5;
 
   public static double driveGearRatio = 6;
 

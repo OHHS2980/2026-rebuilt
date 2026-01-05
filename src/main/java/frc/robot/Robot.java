@@ -137,11 +137,14 @@ public class Robot extends LoggedRobot {
   public void simulationInit() {
 
     SimulatedArena.getInstance();
+    
   }
 
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
-      SimulatedArena.getInstance().simulationPeriodic();
+
+    
+    SimulatedArena.getInstance().simulationPeriodic();
   }
 }

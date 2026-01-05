@@ -6,6 +6,7 @@ import com.ctre.phoenix6.swerve.jni.SwerveJNI.ModuleState;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -17,7 +18,9 @@ public class Module {
 
     public PIDController turnPID;
 
-    public PIDController drivePID;
+    public PIDController drivePD;
+
+    public SimpleMotorFeedforward driveFF;
 
     public ModuleIO moduleIO;
 
@@ -25,7 +28,7 @@ public class Module {
 
     public SwerveModulePosition modulePosition;
 
-    public ModuleState desiredModuleState;
+    public SwerveModuleState desiredModuleState;
 
     public ModuleIOInputs inputs;
 
@@ -41,7 +44,9 @@ public class Module {
         
         ModuleIO moduleIO,
 
-        double kP, double kI, double kD
+        double kP, double kI, double kD,
+
+        double drive_kP, double drive_kD
 
     )
 
@@ -49,6 +54,10 @@ public class Module {
         this.moduleIO = moduleIO; 
 
         turnPID = new PIDController(kP, kI, kD);
+
+        drivePD = new PIDController(kP, 0, kD);
+
+        driveFF = new SimpleMotorFeedforward(5, 5);
 
         inputs = new ModuleIOInputs();
     }
@@ -58,16 +67,29 @@ public class Module {
         moduleIO.setTurnVoltage(
             turnPID.calculate(inputs.turnPosition.getDegrees())
         );
+
+        moduleIO.setDriveVoltage(
+            drivePD.calculate(moduleIO.getDriveVelocity()) + driveFF.calculate(desiredModuleState.speedMetersPerSecond)
+        );
     }
 
     public void runToState(SwerveModuleState state)
     {
+        
+        desiredModuleState = state;
+
         moduleIO.setDriveVelocity(state.speedMetersPerSecond);
-        moduleIO.setTurnPosition(state.angle);
+        System.out.println(state.speedMetersPerSecond);
+        System.out.println(state.angle);
+        turnPID.setSetpoint(state.angle.getDegrees());
+        drivePD.setSetpoint(state.speedMetersPerSecond);
+
     }
 
     public SwerveModulePosition getPosition()
     {
+        System.out.println("pos" + moduleIO.getDriveDistance().baseUnitMagnitude());
+        System.out.println("pos" + moduleIO.getTurnDegrees().getRadians());
         return new SwerveModulePosition(
 
             moduleIO.getDriveDistance(),

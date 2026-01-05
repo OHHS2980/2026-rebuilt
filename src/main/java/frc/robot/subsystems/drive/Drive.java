@@ -51,15 +51,19 @@ public class Drive extends SubsystemBase {
       ModuleIO blModuleIO,
       ModuleIO brModuleIO,
       GyroIO gyroIO,
-      double kP, double kI, double kD
+      double kP, double kI, double kD,
+
+      double drive_kP, double drive_kD
     ) {
 
-        flModule = new Module(flModuleIO, kP, kI, kD);
-        frModule = new Module(frModuleIO, kP, kI, kD);
-        blModule = new Module(blModuleIO, kP, kI, kD);
-        brModule = new Module(brModuleIO, kP, kI, kD);
+        flModule = new Module(flModuleIO, kP, kI, kD, drive_kP, drive_kD);
+        frModule = new Module(frModuleIO, kP, kI, kD, drive_kP, drive_kD);
+        blModule = new Module(blModuleIO, kP, kI, kD, drive_kP, drive_kD);
+        brModule = new Module(brModuleIO, kP, kI, kD, drive_kP, drive_kD);
 
         this.gyroIO = gyroIO;
+
+        chassisSpeeds = new ChassisSpeeds();
 
         modules[0] = flModule;
         modules[1] = frModule;
@@ -73,7 +77,8 @@ public class Drive extends SubsystemBase {
             Constants.brLocation
         );
 
-        odometry = new SwerveDriveOdometry(
+        odometry = new SwerveDriveOdometry
+        (
             kinematics, 
             gyroIO.getHeading(), 
             new SwerveModulePosition[] 
@@ -90,10 +95,8 @@ public class Drive extends SubsystemBase {
 
     public Pose2d getOdomPose()
     {
-
-        
         odometry.update(
-            new Rotation2d(), 
+            gyroIO.getHeading(), 
             new SwerveModulePosition[] 
             {
                 flModule.getPosition(),
@@ -103,16 +106,21 @@ public class Drive extends SubsystemBase {
             }
         );
 
+        System.out.print("odom" + odometry.getPoseMeters());
         return odometry.getPoseMeters();
     }
 
     public void updateModuleStates()
     {
-        moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
+        //moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
+        System.out.print("chassis" + chassisSpeeds);
         for (int module = 0; module < 3; module++)
         {
-            modules[module].runToState(moduleStates[module]);
+            modules[module].runToState
+            (
+                kinematics.toSwerveModuleStates(chassisSpeeds)[module]
+            );
         }
     }
 
@@ -135,6 +143,8 @@ public class Drive extends SubsystemBase {
     {
         RobotState.getInstance().setPose(getOdomPose());
 
+        updateModuleStates();
+
         updateModuleSpeeds();
     }
 
@@ -148,11 +158,7 @@ public class Drive extends SubsystemBase {
         return Commands.run(
          () ->
             {
-                ChassisSpeeds newSpeeds = new ChassisSpeeds(
-                    x.getAsDouble(),
-                    y.getAsDouble(),
-                    rotation.getAsDouble()
-                );
+                
 
                 Rotation2d side =
                   DriverStation.getAlliance().isPresent()
@@ -162,36 +168,39 @@ public class Drive extends SubsystemBase {
 
                 drive.chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds
                 (
-                    newSpeeds,
+                    new ChassisSpeeds(
+                        x.getAsDouble(),
+                        y.getAsDouble(),
+                        rotation.getAsDouble()
+                    ),
                     RobotState.getInstance().getRotation().plus(side)
-                );
-
-                drive.updateModuleStates();
-                
+                );                
             }
          , drive);
     }
 
-    public Command driveRobotCentric(
+    public static Command driveRobotCentric
+    (
         Drive drive,
         DoubleSupplier x,
         DoubleSupplier y,
         DoubleSupplier rotation
     )
+
     {
-        return Commands.run(
-         () ->
+        return Commands.run
+        (
+            () ->
             {
+                System.out.println("yo" + x.getAsDouble() + y.getAsDouble());
                 drive.chassisSpeeds = new ChassisSpeeds(
                     x.getAsDouble(),
                     y.getAsDouble(),
                     rotation.getAsDouble()
-                );
-
-                drive.updateModuleStates();
-                
-            }
-         , drive);
+                );                
+            },
+            drive
+        );
     }
 
 }

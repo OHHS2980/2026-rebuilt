@@ -3,6 +3,10 @@ package frc.robot.subsystems.drive.module;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radian;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
@@ -15,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.AngularVelocityUnit;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -31,10 +36,6 @@ public class ModuleIOSim implements ModuleIO {
 
     private final SimulatedMotorController.GenericMotorController turnMotor;
 
-    
-
-    public SimpleMotorFeedforward feedforward;
-
     public PIDController turnPID;
 
     public Rotation2d turnSetpoint;
@@ -43,9 +44,6 @@ public class ModuleIOSim implements ModuleIO {
 
     public ModuleIOSim(SwerveModuleSimulation driveModuleSim, int moduleNumber)
     {
-        feedforward = new SimpleMotorFeedforward(0.1, 0.15);
-
-        
 
         this.moduleSim = driveModuleSim;
 
@@ -56,49 +54,52 @@ public class ModuleIOSim implements ModuleIO {
 
     }
 
+    @Override
     public void updateInputs(ModuleIOInputs inputs) 
     {
         
     }
 
-
+    @Override
     public void setDriveVoltage(double output) 
     {
-        driveMotor.requestVoltage(Voltage.ofBaseUnits(output, Volts));
+        System.out.println("drive output" + output);
+        driveMotor.requestVoltage(Volts.of(output));
     }
 
+    @Override
     public void setTurnVoltage(double output) 
     {
-        turnMotor.requestVoltage(Voltage.ofBaseUnits(output, Volts));
+        System.out.println("turn output" + output);
+        turnMotor.requestVoltage(Volts.of(output));
     }
 
-    public void setDriveVelocity(double velocityRadPerSec)
+    @Override
+    public double getDriveVelocity()
     {
-        driveMotor.requestVoltage(
-            Voltage.ofBaseUnits( 
-                feedforward.calculate(velocityRadPerSec), Volts
-            )
-        );
+        return moduleSim.getDriveWheelFinalSpeed().in(RadiansPerSecond) / (Math.PI * 2) * Constants.swerveWheelCircumference;
     }
 
-    public void setTurnPosition(Rotation2d rotation)
-    {
-        
-    }
 
+
+    @Override
     public Rotation2d getTurnDegrees()
     {
-        return new Rotation2d(moduleSim.getSteerAbsoluteAngle());
+        System.out.println("getturn " + moduleSim.getSteerAbsoluteAngle());
+        return moduleSim.getSteerAbsoluteFacing();
     }
 
+    @Override
     public Distance getDriveDistance()
     {
+        System.out.println("getdist " + moduleSim.getDriveEncoderUnGearedPosition().in(Radian));
+
         return Distance.ofBaseUnits(
 
-            moduleSim.getDriveWheelFinalPosition().baseUnitMagnitude()
-            / 6 * Math.PI 
-            * Constants.swerveWheelCircumference
+            moduleSim.getDriveEncoderUnGearedPosition().in(Radian)
+            / (6 * Math.PI)
+            * Constants.swerveWheelCircumference,
         
-            , Meter);
+            Meter);
     }
 }

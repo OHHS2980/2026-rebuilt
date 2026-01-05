@@ -9,6 +9,8 @@ import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Pounds;
 
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.COTS;
@@ -33,7 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  PS5Controller controller;
+  CommandPS5Controller controller;
 
   Drive drive;
 
@@ -45,24 +47,24 @@ public class RobotContainer {
         .withSwerveModule(COTS.ofMark4(
                 DCMotor.getKrakenX60(1), // Drive motor is a Kraken X60
                 DCMotor.getKrakenX60(1), // Steer motor is a Falcon 500
-                COTS.WHEELS.COLSONS.cof, // Use the COF for Colson Wheels
+                COTS.WHEELS.BLUE_NITRILE_TREAD.cof, // wheel cof
                 3)) // L3 Gear ratio
         // Configures the track length and track width (spacing between swerve modules)
         .withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
         // Configures the bumper size (dimensions of the robot bumper)
-        .withBumperSize(Inches.of(30), Inches.of(30));
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+        .withBumperSize(Inches.of(30), Inches.of(30))
+        .withRobotMass(Pounds.of(100));
+        
 
   public void mapleSimSetup()
   {
-   
+    SimulatedArena.getInstance().addDriveTrainSimulation(driveSim);
   }
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
 
-    controller = new PS5Controller(0);
+    controller = new CommandPS5Controller(0);
 
     this.driveSim = new SwerveDriveSimulation(
       driveSimConfig,
@@ -75,7 +77,8 @@ public class RobotContainer {
       new ModuleIOSim(driveSim.getModules()[2],2),
       new ModuleIOSim(driveSim.getModules()[3],3),
       new GyroIOSim(driveSim.getGyroSimulation()),
-      0.1, 0.1, 0.1
+      10, 0.1, 0.1,
+      5,0.1
     );
 
     configureBindings();
@@ -97,7 +100,7 @@ public class RobotContainer {
   private void configureBindings() {
 
       drive.setDefaultCommand(
-        drive.driveFieldCentric
+        Drive.driveRobotCentric
         (
           drive, 
           () -> controller.getLeftX(),
