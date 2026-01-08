@@ -97,5 +97,10 @@ public class Module {
         );
     }
 
+    public SwerveModuleState getModuleState()
+    {
+        return moduleIO.getModuleState();
+    }
+
 
 }

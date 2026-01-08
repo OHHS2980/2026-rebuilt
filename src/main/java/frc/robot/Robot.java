@@ -46,7 +46,7 @@ public class Robot extends LoggedRobot {
 
   final StructArrayEntry<SwerveModuleState> states;
 
-  final StructArrayEntry<SwerveModuleState> realStates;
+  final StructArrayEntry<SwerveModuleState> real;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -72,7 +72,7 @@ public class Robot extends LoggedRobot {
       PubSubOption.keepDuplicates(true)
     );
 
-    realStates = inst.getStructArrayTopic("/blud/realStates", SwerveModuleState.struct).getEntry(
+    real = inst.getStructArrayTopic("/blud/real", SwerveModuleState.struct).getEntry(
       robotContainer.drive.getModuleStates(),
       PubSubOption.keepDuplicates(true)
     );
@@ -112,7 +112,7 @@ public class Robot extends LoggedRobot {
       robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds)
     );
 
-    realStates.set(
+    real.set(
       robotContainer.drive.getModuleStates()
     );
 

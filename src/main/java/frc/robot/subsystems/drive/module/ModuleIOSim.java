@@ -44,7 +44,6 @@ public class ModuleIOSim implements ModuleIO {
 
     public ModuleIOSim(SwerveModuleSimulation driveModuleSim, int moduleNumber)
     {
-
         this.moduleSim = driveModuleSim;
 
         driveMotor = moduleSim.useGenericMotorControllerForDrive();
@@ -94,18 +93,20 @@ public class ModuleIOSim implements ModuleIO {
     {
         System.out.println("getdist " + moduleSim.getDriveEncoderUnGearedPosition().in(Radian));
 
-        return Distance.ofBaseUnits(
-
+        return Distance.ofBaseUnits
+        (
             moduleSim.getDriveWheelFinalPosition().in(Radian)
        
             * Constants.swerveWheelRadius,
         
-            Meter);
+            Meter
+        );
     }
 
     @Override
     public SwerveModuleState getModuleState()
     {
+        System.out.print(moduleSim.getCurrentState());
         return moduleSim.getCurrentState();
     }
 }

@@ -170,8 +170,6 @@ public class Drive extends SubsystemBase {
         return Commands.run(
          () ->
             {
-                
-
                 Rotation2d side =
                   DriverStation.getAlliance().isPresent()
                       && DriverStation.getAlliance().get() == Alliance.Red
@@ -193,13 +191,12 @@ public class Drive extends SubsystemBase {
 
     public SwerveModuleState[] getModuleStates()
     {
-
-        for (int module = 0; module < 3; module++)
-        {
-            realModuleStates[module] = moduleIOs[module].getModuleState();
-        }
-
-        return realModuleStates;
+        return new SwerveModuleState[] {
+            flModule.getModuleState(),
+            frModule.getModuleState(),
+            blModule.getModuleState(),
+            brModule.getModuleState()
+        };
     }
 
     public static Command driveRobotCentric
