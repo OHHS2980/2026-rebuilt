@@ -39,9 +39,15 @@ public class Drive extends SubsystemBase {
 
     public Module[] modules = {flModule, frModule, blModule, brModule};
 
+    public ModuleIO[] moduleIOs = new ModuleIO[4];
+
+    public SwerveModuleState[] realModuleStates = new SwerveModuleState[4];
+
     public SwerveModuleState[] moduleStates = new SwerveModuleState[4];
 
     public SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+
+
 
     public Pose2d pose = new Pose2d();
 
@@ -60,6 +66,12 @@ public class Drive extends SubsystemBase {
         frModule = new Module(frModuleIO, kP, kI, kD, drive_kP, drive_kD);
         blModule = new Module(blModuleIO, kP, kI, kD, drive_kP, drive_kD);
         brModule = new Module(brModuleIO, kP, kI, kD, drive_kP, drive_kD);
+
+        moduleIOs[0] = flModuleIO;
+        moduleIOs[1] = frModuleIO;
+        moduleIOs[2] = blModuleIO;
+        moduleIOs[3] = brModuleIO;
+
 
         this.gyroIO = gyroIO;
 
@@ -177,6 +189,17 @@ public class Drive extends SubsystemBase {
                 );                
             }
          , drive);
+    }
+
+    public SwerveModuleState[] getModuleStates()
+    {
+
+        for (int module = 0; module < 3; module++)
+        {
+            realModuleStates[module] = moduleIOs[module].getModuleState();
+        }
+
+        return realModuleStates;
     }
 
     public static Command driveRobotCentric

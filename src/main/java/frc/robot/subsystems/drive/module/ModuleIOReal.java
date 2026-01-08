@@ -1,16 +1,20 @@
 package frc.robot.subsystems.drive.module;
 
-import com.revrobotics.spark.SparkMax;
+import static edu.wpi.first.units.Units.Meter;
+
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.subsystems.drive.module.ModuleIO.ModuleIOInputs;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.measure.Distance;
+import frc.robot.Constants;
 
-public class ModuleIOReal {
+public class ModuleIOReal implements ModuleIO {
     
-    public SparkMax turnMotor; 
+    public TalonFX turnMotor; 
 
-    public SparkMax driveMotor; 
+    public TalonFX driveMotor; 
 
     public PIDController turnPID;
 
@@ -21,35 +25,47 @@ public class ModuleIOReal {
         this.moduleNumber = moduleNumber;
     }
 
+    @Override
     public void updateInputs(ModuleIOInputs inputs) 
     {
-
+        
     }
 
-
+    @Override
     public void setDriveVoltage(double output) 
     {
-
+        System.out.println("drive output" + output);
+        driveMotor.set(output);
     }
 
+    @Override
     public void setTurnVoltage(double output) 
     {
-
+        System.out.println("turn output" + output);
+        turnMotor.set(output);
     }
 
-    public void setDriveVelocity(double velocityRadPerSec)
+    @Override
+    public double getDriveVelocity()
     {
-
+        return driveMotor.getVelocity().getValueAsDouble() * Constants.swerveWheelRadius;
     }
 
-    public void setTurnPosition(Rotation2d rotation)
+
+
+    @Override
+    public Rotation2d getTurnDegrees()
     {
-
+        //System.out.println("getturn " + moduleSim.getSteerAbsoluteAngle());
+        return new Rotation2d(turnMotor.getPosition().getValueAsDouble());
     }
 
-    public void getTurnDegrees()
+    @Override
+    public Distance getDriveDistance()
     {
-
+        return 
+        Distance.ofBaseUnits(driveMotor.getPosition().getValueAsDouble(), Meter);
     }
+
 
 }

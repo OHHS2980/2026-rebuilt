@@ -15,7 +15,6 @@ import frc.robot.subsystems.drive.module.ModuleIO.ModuleIOInputs;
 
 public class Module {
 
-
     public PIDController turnPID;
 
     public PIDController drivePD;
@@ -69,21 +68,20 @@ public class Module {
         );
 
         moduleIO.setDriveVoltage(
-            drivePD.calculate(moduleIO.getDriveVelocity()) + driveFF.calculate(desiredModuleState.speedMetersPerSecond)
+            
+            drivePD.calculate(moduleIO.getDriveVelocity()) //+ driveFF.calculate(desiredModuleState.speedMetersPerSecond)
         );
     }
 
     public void runToState(SwerveModuleState state)
     {
-        
         desiredModuleState = state;
 
-        moduleIO.setDriveVelocity(state.speedMetersPerSecond);
+        //moduleIO.setDriveVelocity(state.speedMetersPerSecond);
         System.out.println(state.speedMetersPerSecond);
         System.out.println(state.angle);
         turnPID.setSetpoint(state.angle.getDegrees());
         drivePD.setSetpoint(state.speedMetersPerSecond);
-
     }
 
     public SwerveModulePosition getPosition()
@@ -95,9 +93,9 @@ public class Module {
             moduleIO.getDriveDistance(),
 
             moduleIO.getTurnDegrees()
-            
+
         );
-
-
     }
+
+
 }

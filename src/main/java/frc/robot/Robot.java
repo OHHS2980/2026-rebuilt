@@ -12,6 +12,8 @@ import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -19,9 +21,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.networktables.PubSubOptions;
+import edu.wpi.first.networktables.StructArrayEntry;
 import edu.wpi.first.networktables.StructEntry;
-import edu.wpi.first.networktables.StructTopic;
-import edu.wpi.first.networktables.Topic;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -33,19 +34,27 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
+  public RobotContainer robotContainer;
+
   RobotState robotState;
 
   final NetworkTable table;
 
   final StructEntry<Pose2d> poseEntry;
 
+  final StructEntry<ChassisSpeeds> chassisEntry;
+
+  final StructArrayEntry<SwerveModuleState> states;
+
+  final StructArrayEntry<SwerveModuleState> realStates;
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   public Robot() {
-    new RobotContainer();
+
+    robotContainer = new RobotContainer();
 
     Logger.start();
 
@@ -58,7 +67,23 @@ public class Robot extends LoggedRobot {
       PubSubOption.keepDuplicates(true)
     );
 
+    chassisEntry = inst.getStructTopic("/blud/chassisSpeeds", ChassisSpeeds.struct).getEntry(
+      robotContainer.drive.chassisSpeeds,
+      PubSubOption.keepDuplicates(true)
+    );
+
+    realStates = inst.getStructArrayTopic("/blud/realStates", SwerveModuleState.struct).getEntry(
+      robotContainer.drive.getModuleStates(),
+      PubSubOption.keepDuplicates(true)
+    );
+
+    states = inst.getStructArrayTopic("/blud/states", SwerveModuleState.struct).getEntry(
+      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds),
+      PubSubOption.keepDuplicates(true)
+    );
+
     robotState = RobotState.getInstance();
+
   }
 
 
@@ -83,7 +108,17 @@ public class Robot extends LoggedRobot {
       RobotState.getInstance().getPose()
     );
 
-    Logger.recordOutput("edoga", RobotState.getInstance().getPose());
+    states.set(
+      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds)
+    );
+
+    realStates.set(
+      robotContainer.drive.getModuleStates()
+    );
+
+    chassisEntry.set(
+      robotContainer.drive.chassisSpeeds
+    );
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

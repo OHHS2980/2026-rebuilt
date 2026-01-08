@@ -35,7 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  CommandPS5Controller controller;
+  XboxController controller;
 
   Drive drive;
 
@@ -64,7 +64,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
 
-    controller = new CommandPS5Controller(0);
+    controller = new XboxController(0);
 
     this.driveSim = new SwerveDriveSimulation(
       driveSimConfig,
@@ -77,15 +77,12 @@ public class RobotContainer {
       new ModuleIOSim(driveSim.getModules()[2],2),
       new ModuleIOSim(driveSim.getModules()[3],3),
       new GyroIOSim(driveSim.getGyroSimulation()),
-      10, 0.1, 0.1,
-      5,0.1
+      Constants.SimConstants.turnP, Constants.SimConstants.turnI, Constants.SimConstants.turnD,
+      Constants.SimConstants.driveP, Constants.SimConstants.driveD
     );
 
     configureBindings();
     mapleSimSetup();
-
-
-
   }
 
   /**
@@ -99,15 +96,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-      drive.setDefaultCommand(
-        Drive.driveRobotCentric
-        (
-          drive, 
-          () -> controller.getLeftX(),
-          () -> controller.getLeftY(),
-          () -> controller.getRightX()
-        )
-      );
+    drive.setDefaultCommand(
+      Drive.driveRobotCentric
+      (
+        drive, 
+        () -> controller.getLeftX(),
+        () -> controller.getLeftY(),
+        () -> controller.getRightX()
+      )
+    );
   }
 
   /**

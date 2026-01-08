@@ -4,6 +4,7 @@ import org.dyn4j.geometry.Rotation;
 import org.littletonrobotics.junction.AutoLog;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Distance;
 
 public interface ModuleIO {
@@ -39,8 +40,6 @@ public interface ModuleIO {
 
     public default void setTurnVoltage(double output) {}
 
-    public default void setDriveVelocity(double velocityRadPerSec) {}
-
     public default void setTurnPosition(Rotation2d rotation) {}
 
     public default Rotation2d getTurnDegrees() 
@@ -58,6 +57,9 @@ public interface ModuleIO {
         return 0;
     }
 
-    
+    public default SwerveModuleState getModuleState()
+    {
+        return null;
+    }
 
 }

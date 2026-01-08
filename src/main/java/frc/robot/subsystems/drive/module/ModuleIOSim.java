@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drive.module;
 
+import static edu.wpi.first.units.Units.Inch;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Meter;
@@ -18,6 +19,7 @@ import org.ironmaple.simulation.motorsims.SimulatedMotorController.GenericMotorC
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.AngularVelocityUnit;
 import edu.wpi.first.units.measure.Distance;
@@ -29,8 +31,6 @@ import frc.robot.Constants;
 public class ModuleIOSim implements ModuleIO {
     
     public SwerveModuleSimulation moduleSim;
-
-    public SwerveModuleSimulationConfig config;
 
     private final SimulatedMotorController.GenericMotorController driveMotor;
 
@@ -77,7 +77,7 @@ public class ModuleIOSim implements ModuleIO {
     @Override
     public double getDriveVelocity()
     {
-        return moduleSim.getDriveWheelFinalSpeed().in(RadiansPerSecond) / (Math.PI * 2) * Constants.swerveWheelCircumference;
+        return moduleSim.getDriveWheelFinalSpeed().in(RadiansPerSecond) * Constants.swerveWheelRadius;
     }
 
 
@@ -96,10 +96,16 @@ public class ModuleIOSim implements ModuleIO {
 
         return Distance.ofBaseUnits(
 
-            moduleSim.getDriveEncoderUnGearedPosition().in(Radian)
-            / (6 * Math.PI)
-            * Constants.swerveWheelCircumference,
+            moduleSim.getDriveWheelFinalPosition().in(Radian)
+       
+            * Constants.swerveWheelRadius,
         
             Meter);
+    }
+
+    @Override
+    public SwerveModuleState getModuleState()
+    {
+        return moduleSim.getCurrentState();
     }
 }

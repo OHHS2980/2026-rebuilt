@@ -17,10 +17,27 @@ import edu.wpi.first.units.measure.Mass;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
 
+  public static class SimConstants {
+
+    public static double turnP = 0.1;
+
+    public static double turnI = 0;
+  
+    public static double turnD = 0.001;
+  
+    public static double driveP = 0.1;
+  
+    public static double driveD = 0.001;
+    
+  }
+
+
+  
   public static final double MAX_SPEED = 0;
 
   public static Translation2d flLocation = new Translation2d(-5,5);
@@ -45,9 +62,10 @@ public final class Constants {
 
   public static double robotMass;
 
-  public static int swerveWheelCircumference = 5;
+  public static double swerveWheelRadius = 0.1;
 
   public static double driveGearRatio = 6;
 
   public static double turnGearRatio = 6;
+
 }
