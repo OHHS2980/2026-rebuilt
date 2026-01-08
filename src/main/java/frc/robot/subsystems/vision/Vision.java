@@ -1,6 +1,4 @@
 package frc.robot.subsystems.vision;
-
-public class Vision {
-    
-    // find the hardware first!!! <- yelling at myself
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+public class Vision extends SubsystemBase {
 }
