@@ -1,19 +1,17 @@
 package frc.robot.subsystems.drive;
 
-import org.ironmaple.simulation.drivesims.GyroSimulation;
-
+import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import swervelib.imu.NavXSwerve;
 
 public class GyroIOReal implements GyroIO {
     
-    NavXSwerve driveGyro;
+    AHRS driveGyro;
 
     public GyroIOReal()
     {
-        driveGyro = new NavXSwerve(NavXComType.kUSB1);
+        driveGyro = new AHRS(NavXComType.kUSB1);
     }
 
     public Rotation2d getHeading()
