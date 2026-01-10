@@ -35,7 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  PS5Controller controller;
+  XboxController controller;
 
   Drive drive;
 
@@ -64,7 +64,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
 
-    controller = new PS5Controller(0);
+    controller = new XboxController(0);
 
     this.driveSim = new SwerveDriveSimulation(
       driveSimConfig,

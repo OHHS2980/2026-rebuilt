@@ -56,7 +56,7 @@ public class ModuleIOSim implements ModuleIO {
     @Override
     public void updateInputs(ModuleIOInputs inputs) 
     {
-        
+        inputs.turnPosition = getTurnDegrees();
     }
 
     @Override

@@ -69,9 +69,10 @@ public class Module {
         );
 
         moduleIO.setDriveVoltage(
-            
             drivePD.calculate(moduleIO.getDriveVelocity()) //+ driveFF.calculate(desiredModuleState.speedMetersPerSecond)
         );
+
+        moduleIO.updateInputs(inputs);
 
         configurePID();
     }

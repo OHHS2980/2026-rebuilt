@@ -127,7 +127,7 @@ public class Drive extends SubsystemBase {
         //moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
         System.out.print("chassis" + chassisSpeeds);
-        for (int module = 0; module < 3; module++)
+        for (int module = 0; module <= 3; module++)
         {
             modules[module].runToState
             (
@@ -139,7 +139,7 @@ public class Drive extends SubsystemBase {
 
     public void updateModuleSpeeds()
     {
-        for (int module = 0; module < 3; module++)
+        for (int module = 0; module <= 3; module++)
         {
             modules[module].update();
         }
