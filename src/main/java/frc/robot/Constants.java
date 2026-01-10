@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import edu.wpi.first.math.geometry.Translation2d;
 //import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
+import frc.robot.util.LoggedTunableNumber;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -24,15 +27,15 @@ public final class Constants {
 
   public static class SimConstants {
 
-    public static double turnP = 0.1;
+    public static LoggedNetworkNumber turnP = new LoggedNetworkNumber("/Tuning/turnP", 0.1);
 
-    public static double turnI = 0;
+    public static LoggedNetworkNumber turnI = new LoggedNetworkNumber("/Tuning/turnI", 0);
   
-    public static double turnD = 0.001;
+    public static LoggedNetworkNumber  turnD = new LoggedNetworkNumber ("/Tuning/turnD", 0.01);
   
-    public static double driveP = 0.1;
+    public static LoggedNetworkNumber  driveP = new LoggedNetworkNumber("/Tuning/driveP", 0.1);
   
-    public static double driveD = 0.001;
+    public static LoggedNetworkNumber  driveD = new LoggedNetworkNumber("/Tuning/driveD", 0.1);
     
   }
 

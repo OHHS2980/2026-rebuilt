@@ -96,7 +96,7 @@ public class ModuleIOSim implements ModuleIO {
         return Distance.ofBaseUnits
         (
             moduleSim.getDriveWheelFinalPosition().in(Radian)
-       
+        
             * Constants.swerveWheelRadius,
         
             Meter
@@ -109,4 +109,6 @@ public class ModuleIOSim implements ModuleIO {
         System.out.print(moduleSim.getCurrentState());
         return moduleSim.getCurrentState();
     }
+
+
 }

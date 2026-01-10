@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Distance;
+import frc.robot.Constants;
 import frc.robot.subsystems.drive.module.ModuleIO.ModuleIOInputs;
 
 public class Module {
@@ -71,6 +72,8 @@ public class Module {
             
             drivePD.calculate(moduleIO.getDriveVelocity()) //+ driveFF.calculate(desiredModuleState.speedMetersPerSecond)
         );
+
+        configurePID();
     }
 
     public void runToState(SwerveModuleState state)
@@ -102,5 +105,25 @@ public class Module {
         return moduleIO.getModuleState();
     }
 
+    public void configurePID
+    (
+
+    ) 
+        
+    {
+        turnPID.setPID
+        (
+            Constants.SimConstants.turnP.get(), 
+            Constants.SimConstants.turnI.get(), 
+            Constants.SimConstants.turnD.get()
+        );
+
+        drivePD.setPID
+        (
+            Constants.SimConstants.driveP.get(), 
+            0,
+            Constants.SimConstants.driveD.get()
+        );
+    }
 
 }

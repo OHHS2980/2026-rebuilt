@@ -77,8 +77,8 @@ public class RobotContainer {
       new ModuleIOSim(driveSim.getModules()[2],2),
       new ModuleIOSim(driveSim.getModules()[3],3),
       new GyroIOSim(driveSim.getGyroSimulation()),
-      Constants.SimConstants.turnP, Constants.SimConstants.turnI, Constants.SimConstants.turnD,
-      Constants.SimConstants.driveP, Constants.SimConstants.driveD
+      Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
+      Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
     );
 
     configureBindings();
