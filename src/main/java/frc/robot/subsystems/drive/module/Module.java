@@ -82,16 +82,14 @@ public class Module {
         desiredModuleState = state;
 
         //moduleIO.setDriveVelocity(state.speedMetersPerSecond);
-        System.out.println(state.speedMetersPerSecond);
-        System.out.println(state.angle);
+
         turnPID.setSetpoint(state.angle.getDegrees());
         drivePD.setSetpoint(state.speedMetersPerSecond);
     }
 
     public SwerveModulePosition getPosition()
     {
-        System.out.println("pos" + moduleIO.getDriveDistance().baseUnitMagnitude());
-        System.out.println("pos" + moduleIO.getTurnDegrees().getRadians());
+
         return new SwerveModulePosition(
 
             moduleIO.getDriveDistance(),
@@ -106,11 +104,7 @@ public class Module {
         return moduleIO.getModuleState();
     }
 
-    public void configurePID
-    (
-
-    ) 
-        
+    public void configurePID()
     {
         turnPID.setPID
         (

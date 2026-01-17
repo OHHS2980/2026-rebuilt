@@ -15,7 +15,7 @@ public class Turret extends SubsystemBase {
 
     public TurretIO turretIO;
 
-    public Rotation2d desiredRotation;
+    public Rotation2d desiredRotation = new Rotation2d();
 
     public TurretIOInputs inputs = new TurretIOInputs();
 
@@ -29,25 +29,33 @@ public class Turret extends SubsystemBase {
 
     {
         this.turretIO = turretIO;
-        turretPID.setPID(kP,kI,kD);
+
+        turretPID = new PIDController(kP, kI, kD);
+        
     }
 
     public void moveToRotation(Rotation2d rotation)
     {
+        desiredRotation = rotation;
         turretPID.setSetpoint(rotation.getDegrees() % Constants.turretLimit);
     }
 
-    public Rotation2d autoalign()
+    public Rotation2d odometryAutoalign()
     {
-        double adjacent = RobotState.getInstance().estimatedPose.getY()  - Constants.FieldConstants.getHub().getY();
-        double opposite = RobotState.getInstance().estimatedPose.getX()  - Constants.FieldConstants.getHub().getX();
-        double hypotenuse = Math.sqrt(Math.pow(adjacent, 2) + Math.pow(opposite, 2));
+        double y = RobotState.getInstance().estimatedPose.getY()  - Constants.FieldConstants.getHub().getY();
+        double x = RobotState.getInstance().estimatedPose.getX()  - Constants.FieldConstants.getHub().getX();
+        double hypotenuse = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));
 
-        double angle = Math.acos(
-          adjacent / hypotenuse
+        double angle = Math.asin(
+          x / hypotenuse
         );
 
-        return new Rotation2d(Math.toDegrees(angle));
+        return new Rotation2d(angle);
+    }
+
+    public Rotation2d visionAutoalign()
+    {
+        return null;
     }
 
     public void update()
@@ -68,6 +76,10 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic()
     {
+        turretIO.updateInputs(inputs);
+
         update();
+
+        moveToRotation(odometryAutoalign());
     }
 }

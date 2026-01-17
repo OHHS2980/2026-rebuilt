@@ -6,7 +6,7 @@ public interface TurretIO {
 
     public class TurretIOInputs
     {
-        public Rotation2d currentRotation;
+        public Rotation2d currentRotation = new Rotation2d();
     }
 
     public default Rotation2d getRotation()
@@ -15,5 +15,9 @@ public interface TurretIO {
     }
 
     public void setPower(double power);
+
+    public default void updateInputs(TurretIOInputs inputs)
+    {
+    }
     
 }

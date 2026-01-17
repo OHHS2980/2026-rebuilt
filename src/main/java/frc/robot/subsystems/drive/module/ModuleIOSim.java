@@ -62,14 +62,12 @@ public class ModuleIOSim implements ModuleIO {
     @Override
     public void setDriveVoltage(double output) 
     {
-        System.out.println("drive output" + output);
         driveMotor.requestVoltage(Volts.of(output));
     }
 
     @Override
     public void setTurnVoltage(double output) 
     {
-        System.out.println("turn output" + output);
         turnMotor.requestVoltage(Volts.of(output));
     }
 

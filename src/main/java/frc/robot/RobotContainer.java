@@ -55,9 +55,9 @@ public class RobotContainer {
                 COTS.WHEELS.BLUE_NITRILE_TREAD.cof, // wheel cof
                 3)) // L3 Gear ratio
         // Configures the track length and track width (spacing between swerve modules)
-        .withTrackLengthTrackWidth(Inches.of(100), Inches.of(100))
+        .withTrackLengthTrackWidth(Inches.of(26), Inches.of(28))
         // Configures the bumper size (dimensions of the robot bumper)
-        .withBumperSize(Inches.of(110), Inches.of(110))
+        .withBumperSize(Inches.of(30), Inches.of(30))
         .withRobotMass(Pounds.of(100));
         
 
@@ -86,9 +86,12 @@ public class RobotContainer {
       Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
     );
 
-    this.turret = new Turret(new TurretIOSim(),
-      
-    1, 0, 0);
+    this.turret = new Turret(
+      new TurretIOSim(),
+      Constants.SimConstants.turretP.get(), 
+      Constants.SimConstants.turretI.get(),
+      Constants.SimConstants.turretD.get()
+    );
 
     configureBindings();
     mapleSimSetup();

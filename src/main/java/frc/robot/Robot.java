@@ -126,11 +126,11 @@ public class Robot extends LoggedRobot {
       RobotState.getInstance().getPose()
     );
 
-    turretAngle.set(
+    turretDesiredAngle.set(
       robotContainer.turret.desiredRotation.getDegrees()
     );
 
-    turretDesiredAngle.set(
+    turretAngle.set(
       robotContainer.turret.inputs.currentRotation.getDegrees()
     );
 
