@@ -18,16 +18,22 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** IO implementation for real PhotonVision hardware. */
 public class VisionIOPhotonVision implements VisionIO {
   protected final PhotonCamera camera;
   protected final Transform3d robotToCamera;
+
+  public PhotonPipelineResult[] results = new PhotonPipelineResult[20];
 
   /**
    * Creates a new VisionIOPhotonVision.
@@ -40,6 +46,23 @@ public class VisionIOPhotonVision implements VisionIO {
     this.robotToCamera = robotToCamera;
   }
 
+  public void benjamin(PhotonPipelineResult result)
+  {
+
+    double[] hubIDs = {8,9,10,11,2,5,4,3};
+
+    PhotonTrackedTarget target = result.getBestTarget();
+    if (Arrays.stream(hubIDs).anyMatch(x -> x == target.getFiducialId()))
+    {
+      
+    }
+  }
+
+  public PhotonPipelineResult[] getResult()
+  {
+    return results;
+  }
+
   @Override
   public void updateInputs(VisionIOInputs inputs) {
     inputs.connected = camera.isConnected();
@@ -47,7 +70,16 @@ public class VisionIOPhotonVision implements VisionIO {
     // Read new camera observations
     Set<Short> tagIds = new HashSet<>();
     List<PoseObservation> poseObservations = new LinkedList<>();
+    
+    for (int i = 0; i <= 19; i++) {
+      results[i] = null;
+    }
+
+    int element = 0;
     for (var result : camera.getAllUnreadResults()) {
+      results[element] = result;
+      element++;
+
       // Update latest target observation
       if (result.hasTargets()) {
         inputs.latestTargetObservation =
