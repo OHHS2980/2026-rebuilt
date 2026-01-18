@@ -82,14 +82,12 @@ public class ModuleIOSim implements ModuleIO {
     @Override
     public Rotation2d getTurnDegrees()
     {
-        System.out.println("getturn " + moduleSim.getSteerAbsoluteAngle());
         return moduleSim.getSteerAbsoluteFacing();
     }
 
     @Override
     public Distance getDriveDistance()
     {
-        System.out.println("getdist " + moduleSim.getDriveEncoderUnGearedPosition().in(Radian));
 
         return Distance.ofBaseUnits
         (
@@ -104,7 +102,6 @@ public class ModuleIOSim implements ModuleIO {
     @Override
     public SwerveModuleState getModuleState()
     {
-        System.out.print(moduleSim.getCurrentState());
         return moduleSim.getCurrentState();
     }
 

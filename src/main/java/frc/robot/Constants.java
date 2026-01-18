@@ -34,17 +34,17 @@ public final class Constants {
   
     public static LoggedNetworkNumber  turnD = new LoggedNetworkNumber ("/Tuning/turnD", 0);
   
-    public static LoggedNetworkNumber  driveP = new LoggedNetworkNumber("/Tuning/driveP", 1.5);
+    public static LoggedNetworkNumber  driveP = new LoggedNetworkNumber("/Tuning/driveP", 2);
   
-    public static LoggedNetworkNumber  driveD = new LoggedNetworkNumber("/Tuning/driveD", 0.1);
+    public static LoggedNetworkNumber  driveD = new LoggedNetworkNumber("/Tuning/driveD", 0);
 
 
 
-    public static LoggedNetworkNumber turretP = new LoggedNetworkNumber("/Tuning/turretP", 0.5);
+    public static LoggedNetworkNumber turretP = new LoggedNetworkNumber("/Tuning/turretP", 0.05);
 
     public static LoggedNetworkNumber turretI = new LoggedNetworkNumber("/Tuning/turretI", 0);
   
-    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 0);
+    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 1);
     
   }
 
@@ -52,16 +52,8 @@ public final class Constants {
 
     public static Pose3d getHub()
     {
-      return new Pose3d(0,0,10, null);
+      return new Pose3d(4.0132,4.572,1.828, null);
     }
-
-
-
-    public static LoggedNetworkNumber turretP = new LoggedNetworkNumber("/Tuning/turretP", 0.5);
-
-    public static LoggedNetworkNumber turretI = new LoggedNetworkNumber("/Tuning/turretI", 0);
-  
-    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 0);
     
   }
 
@@ -96,6 +88,6 @@ public final class Constants {
 
   public static double turnGearRatio = 6;
 
-  public static double turretLimit;
+  public static double turretLimit = 400;
 
 }

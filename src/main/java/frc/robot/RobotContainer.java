@@ -10,6 +10,8 @@ import frc.robot.subsystems.Turret.TurretIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
@@ -43,6 +45,8 @@ public class RobotContainer {
   Drive drive;
 
   Turret turret;
+
+  Vision vision;
 
   SwerveDriveSimulation driveSim;
   final DriveTrainSimulationConfig driveSimConfig = DriveTrainSimulationConfig.Default()
@@ -86,11 +90,13 @@ public class RobotContainer {
       Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
     );
 
+
     this.turret = new Turret(
       new TurretIOSim(),
       Constants.SimConstants.turretP.get(), 
       Constants.SimConstants.turretI.get(),
-      Constants.SimConstants.turretD.get()
+      Constants.SimConstants.turretD.get(),
+      null
     );
 
     configureBindings();

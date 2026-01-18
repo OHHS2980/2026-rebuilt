@@ -42,7 +42,10 @@ public class Robot extends LoggedRobot {
 
   final NetworkTable table;
 
+  
   final StructEntry<Pose2d> poseEntry;
+
+  final StructEntry<Pose2d> turretEntry;
 
   final StructEntry<ChassisSpeeds> chassisEntry;
 
@@ -69,6 +72,11 @@ public class Robot extends LoggedRobot {
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
     table = inst.getTable("blud");
+
+    turretEntry = inst.getStructTopic("/blud/turretPose", Pose2d.struct).getEntry(
+      robotContainer.turret.turretPose,
+      PubSubOption.keepDuplicates(true)
+    );
 
     poseEntry = inst.getStructTopic("/blud/estimatedPose", Pose2d.struct).getEntry(
       RobotState.getInstance().getPose(), 
@@ -124,6 +132,10 @@ public class Robot extends LoggedRobot {
 
     poseEntry.set(
       RobotState.getInstance().getPose()
+    );
+
+    turretEntry.set(
+      robotContainer.turret.turretPose
     );
 
     turretDesiredAngle.set(

@@ -34,14 +34,12 @@ public class ModuleIOReal implements ModuleIO {
     @Override
     public void setDriveVoltage(double output) 
     {
-        System.out.println("drive output" + output);
         driveMotor.set(output);
     }
 
     @Override
     public void setTurnVoltage(double output) 
     {
-        System.out.println("turn output" + output);
         turnMotor.set(output);
     }
 
@@ -56,7 +54,6 @@ public class ModuleIOReal implements ModuleIO {
     @Override
     public Rotation2d getTurnDegrees()
     {
-        //System.out.println("getturn " + moduleSim.getSteerAbsoluteAngle());
         return new Rotation2d(turnMotor.getPosition().getValueAsDouble());
     }
 

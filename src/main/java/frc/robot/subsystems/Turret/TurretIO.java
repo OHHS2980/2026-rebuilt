@@ -4,9 +4,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface TurretIO {
 
-    public class TurretIOInputs
+    public static class TurretIOInputs
     {
-        public Rotation2d currentRotation = new Rotation2d();
+        public Rotation2d currentRotation = new Rotation2d(1);
     }
 
     public default Rotation2d getRotation()
