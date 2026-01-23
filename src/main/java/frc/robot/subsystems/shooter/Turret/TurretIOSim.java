@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Turret;
+package frc.robot.subsystems.shooter.Turret;
 
 import org.ironmaple.simulation.motorsims.MapleMotorSim;
 import org.ironmaple.simulation.motorsims.SimMotorConfigs;
@@ -18,17 +18,13 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 public class TurretIOSim implements TurretIO {
 
     public DCMotorSim motor;
-
-    public Timer timer;
-
     
 
     public double lastTime = 0;
 
     public TurretIOSim()
     {
-        timer = new Timer();
-        timer.start();
+
         
         motor = new DCMotorSim
         (
@@ -52,10 +48,10 @@ public class TurretIOSim implements TurretIO {
 
     @Override
     public void setPower(double power) {
-        motor.setInputVoltage(power);
+        motor.setInputVoltage(power * 12);
     }
     
-    public void updateInputs(TurretIOInputs inputs)
+    public void updateInputs(TurretIOInputs inputs, Timer timer)
     {
         motor.update(timer.get() - lastTime);
         

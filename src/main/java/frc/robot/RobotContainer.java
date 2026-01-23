@@ -4,12 +4,14 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Turret.Turret;
-import frc.robot.subsystems.Turret.TurretIO;
-import frc.robot.subsystems.Turret.TurretIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Hood.HoodIOSim;
+import frc.robot.subsystems.shooter.Turret.Turret;
+import frc.robot.subsystems.shooter.Turret.TurretIO;
+import frc.robot.subsystems.shooter.Turret.TurretIOSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 
@@ -44,7 +46,7 @@ public class RobotContainer {
 
   Drive drive;
 
-  Turret turret;
+  Shooter shooter;
 
   Vision vision;
 
@@ -91,12 +93,13 @@ public class RobotContainer {
     );
 
 
-    this.turret = new Turret(
+    this.shooter = new Shooter(
       new TurretIOSim(),
+      new HoodIOSim(),
       Constants.SimConstants.turretP.get(), 
       Constants.SimConstants.turretI.get(),
       Constants.SimConstants.turretD.get(),
-      null
+      0,0,0
     );
 
     configureBindings();

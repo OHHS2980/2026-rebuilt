@@ -6,6 +6,7 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 //import edu.wpi.first.units.measure.Distance;
@@ -50,9 +51,14 @@ public final class Constants {
 
   public static class FieldConstants {
 
-    public static Pose3d getHub()
+    public static Pose2d getHub()
     {
-      return new Pose3d(4.0132,4.572,1.828, null);
+      return new Pose2d(4.0132,4.572, null);
+    }
+
+    public static double hubHeight()
+    {
+      return 1.828;
     }
     
   }
@@ -61,10 +67,10 @@ public final class Constants {
   
   public static final double MAX_SPEED = 0;
 
-  public static Translation2d flLocation = new Translation2d(1.1,1.1);
-  public static Translation2d frLocation = new Translation2d(1.1,-1.1);
-  public static Translation2d blLocation = new Translation2d(-1.1,-1.1);
-  public static Translation2d brLocation = new Translation2d(-1.1,1.1);
+  public static Translation2d flLocation = new Translation2d(0.3556,0.3302);
+  public static Translation2d frLocation = new Translation2d(0.3556,-0.3302);
+  public static Translation2d blLocation = new Translation2d(-0.3556,-0.3302);
+  public static Translation2d brLocation = new Translation2d(-0.3556,0.3302);
 
   //CAN IDs
 
@@ -82,7 +88,7 @@ public final class Constants {
 
   public static double robotMass;
 
-  public static double swerveWheelRadius = 0.1;
+  public static double swerveWheelRadius = 0.0381;
 
   public static double driveGearRatio = 6;
 

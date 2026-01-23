@@ -1,19 +1,20 @@
-package frc.robot.subsystems.Turret;
+package frc.robot.subsystems.shooter.Turret;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.subsystems.Turret.TurretIO.TurretIOInputs;
-
+import frc.robot.subsystems.shooter.Turret.TurretIO.TurretIOInputs;
 import frc.robot.subsystems.vision.*;
 
-public class Turret extends SubsystemBase {
+public class Turret {
     
     // brings things into existence. Is God
     public Pose2d turretPose;
@@ -71,8 +72,12 @@ public class Turret extends SubsystemBase {
     // and angle
     public Rotation2d odometryAutoalign()
     {
-        double y = RobotState.getInstance().estimatedPose.getY()  - Constants.FieldConstants.getHub().getY();
-        double x = RobotState.getInstance().estimatedPose.getX()  - Constants.FieldConstants.getHub().getX();
+
+        Translation2d hubDistance = 
+            RobotState.getInstance().getPose().getTranslation()
+            .minus(Constants.FieldConstants.getHub().getTranslation());
+        double y = RobotState.getInstance().getPose().getY() - Constants.FieldConstants.getHub().getY();
+        double x = RobotState.getInstance().getPose().getX() - Constants.FieldConstants.getHub().getX();
         double hypotenuse = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));
 
         double angle = Math.asin(
@@ -88,15 +93,14 @@ public class Turret extends SubsystemBase {
         return null;
     }
 
-    public void update()
+    public void autoalign()
     {
-        System.out.println(turretPID.calculate(turretIO.getRotation().getDegrees()));
+        setDesiredRotation(odometryAutoalign());
+    }
 
-        System.out.println("error"+turretPID.getPeriod());
-
-        System.out.println("error"+turretPID.getErrorDerivative());
-
-        System.out.println("set"+turretPID.getSetpoint());
+    public void update(Timer timer)
+    {
+        turretIO.updateInputs(inputs, timer);
 
 
         turretPID.setPID
@@ -128,13 +132,4 @@ public class Turret extends SubsystemBase {
 
     }
 
-    @Override
-    public void periodic()
-    {
-        turretIO.updateInputs(inputs);
-
-        update();
-
-        setDesiredRotation(odometryAutoalign());
-    }
 }

@@ -1,10 +1,10 @@
-package frc.robot.subsystems.Turret;
+package frc.robot.subsystems.shooter.Hood;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public interface TurretIO {
-
-    public static class TurretIOInputs
+public interface HoodIO {
+    
+    public static class HoodIOInputs
     {
         public Rotation2d currentRotation = new Rotation2d(1);
     }
@@ -16,8 +16,9 @@ public interface TurretIO {
 
     public void setPower(double power);
 
-    public default void updateInputs(TurretIOInputs inputs)
+    public default void updateInputs(HoodIOInputs inputs)
     {
+
     }
-    
+
 }
