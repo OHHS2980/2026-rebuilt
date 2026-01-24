@@ -72,6 +72,8 @@ public final class Constants {
   public static Translation2d blLocation = new Translation2d(-0.3556,-0.3302);
   public static Translation2d brLocation = new Translation2d(-0.3556,0.3302);
 
+  public static Translation2d[] locations = new Translation2d[] {flLocation, frLocation, blLocation, brLocation};
+
   //CAN IDs
 
   public static final int armEncoderID = 0;

@@ -7,6 +7,7 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -152,7 +153,8 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic()
     {
-        RobotState.getInstance().setPose(getOdomPose());
+        //RobotState.getInstance().setPose(getOdomPose());
+        RobotState.getInstance().update(new Rotation3d(gyroIO.getHeading()), modulePositions);
 
         updateModuleStates();
 

@@ -55,7 +55,7 @@ public class Turret {
         (
             (rotation
             .minus(RobotState.getInstance().getRotation())
-            .plus(new Rotation2d(Math.toRadians(90)))
+            .rotateBy(new Rotation2d(Math.toRadians(90)))
             .getDegrees()
             % Constants.turretLimit)
         );
@@ -76,6 +76,7 @@ public class Turret {
         Translation2d hubDistance = 
             RobotState.getInstance().getPose().getTranslation()
             .minus(Constants.FieldConstants.getHub().getTranslation());
+
         double y = RobotState.getInstance().getPose().getY() - Constants.FieldConstants.getHub().getY();
         double x = RobotState.getInstance().getPose().getX() - Constants.FieldConstants.getHub().getX();
         double hypotenuse = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));

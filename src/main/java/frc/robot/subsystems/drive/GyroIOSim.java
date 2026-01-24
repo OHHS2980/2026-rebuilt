@@ -3,6 +3,8 @@ package frc.robot.subsystems.drive;
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.motorcontrol.NidecBrushless;
 import frc.robot.RobotState;
 
 
@@ -15,6 +17,8 @@ public class GyroIOSim implements GyroIO {
         gyroSim = driveGyroSim;
         driveGyroSim.setRotation(RobotState.getInstance().getRotation());
     }
+
+
 
     public Rotation2d getHeading()
     {
