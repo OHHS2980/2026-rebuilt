@@ -23,6 +23,40 @@ import frc.robot.util.LoggedTunableNumber;
  */
 public final class Constants {
 
+  public static double flDriveID = 30;
+  public static double flTurnID = 10;
+  public static double flEncoderID = 10;
+
+
+  public static double frDriveID = 0;
+  public static double frTurnID = 0;
+  public static double frEncoderID = 10;
+
+
+  public static double blDriveID = 0;
+  public static double blTurnID = 0;
+  public static double blEncoderID = 10;
+
+
+  public static double brDriveID = 0;
+  public static double brTurnID = 0;
+  public static double brEncoderID = 10;
+
+
+  public static int turretID = 8;
+  public static int turretID2 = 10;
+
+
+  public enum Mode 
+  {
+    SIM,
+    REAL
+  }
+
+  public static Mode mode = Mode.SIM;
+
+
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -97,5 +131,11 @@ public final class Constants {
   public static double turnGearRatio = 6;
 
   public static double turretLimit = 400;
+
+  public static String limelightName;
+
+  public static String camName;
+  
+  public static double TURRET_GEAR_RATIO = 100;
 
 }

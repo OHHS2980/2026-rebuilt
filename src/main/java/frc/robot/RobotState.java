@@ -1,14 +1,14 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.PoseEstimator;
-import edu.wpi.first.math.estimator.PoseEstimator3d;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator3d;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -17,12 +17,13 @@ import frc.robot.subsystems.drive.GyroIO;
 public class RobotState
 {
 
-    public PoseEstimator3d poseEstimator;
 
-    public SwerveDrivePoseEstimator3d swerveEstimator;
+    public SwerveDrivePoseEstimator swerveEstimator;
 
     private static RobotState instance;
 
+
+    @AutoLogOutput(key = "poo/estimatedPose")
     public Pose2d estimatedPose = new Pose2d();
 
     public Rotation2d getRotation()
@@ -35,33 +36,30 @@ public class RobotState
         return instance;
     }
 
-    public void addToBuffer(Pose3d)
+    public void addMeasurement(Pose2d pose, double timestamp)
     {
-
+        swerveEstimator.addVisionMeasurement(pose, timestamp);
     }
 
-    public void addMeasurement(Pose3d pose, double timestamp)
+    public void setup(SwerveDriveKinematics kinematics, GyroIO gyro, SwerveModulePosition[] positions)
     {
-        poseEstimator.addVisionMeasurement(pose, timestamp);
-    }
-
-    public void setup(SwerveDriveKinematics kinematics, GyroIO gyro)
-    {
-        swerveEstimator = new SwerveDrivePoseEstimator3d(kinematics,
-            new Rotation3d(),
-            new SwerveModulePosition[4],
-            new Pose3d()
+        swerveEstimator = new SwerveDrivePoseEstimator(kinematics,
+            new Rotation2d(),
+            positions,
+            new Pose2d()
         );
     }
     
-    public void update(Rotation3d gyroAngle, SwerveModulePosition[] positions)
+    public void update(Rotation2d gyroAngle, SwerveModulePosition[] positions)
     {
         swerveEstimator.update(gyroAngle, positions);
+
+        estimatedPose = swerveEstimator.getEstimatedPosition();
     }
 
-    public Pose3d getEstimatedPose()
+    public Pose2d getEstimatedPose()
     {
-        return poseEstimator.getEstimatedPosition();
+        return swerveEstimator.getEstimatedPosition();
     }
 
     public Translation2d getPosition()

@@ -15,7 +15,9 @@ public class IndexMotor implements IndexingIO{
 
     public void updateInputs(IndexIOInputs inputs) {
 
-        ifOk(indexMotor, () -> indexMotor.getBusVoltage(), (value) -> inputs.indexVoltage = value);
+      inputs.indexVoltage = indexMotor.getBusVoltage();
+      inputs.indexCurrent = indexMotor.getOutputCurrent();
+      inputs.indexPosition = encoder.getPosition();
         ifOk(indexMotor, () -> indexMotor.getOutputCurrent(), (value) -> inputs.indexCurrent = value);
         ifOk(indexMotor, () -> encoder.getPosition(), (value) -> inputs.indexPosition = value);
         ifOk(indexMotor, () -> encoder.getVelocity(), (value -> inputs.indexVeloctiy = value));

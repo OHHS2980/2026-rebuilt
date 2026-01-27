@@ -42,16 +42,16 @@ public class Robot extends LoggedRobot {
 
   final NetworkTable table;
 
-  
   final StructEntry<Pose2d> poseEntry;
-
-  final StructEntry<Pose2d> turretEntry;
 
   final StructEntry<ChassisSpeeds> chassisEntry;
 
   final StructArrayEntry<SwerveModuleState> states;
 
   final StructArrayEntry<SwerveModuleState> real;
+  
+
+  final StructEntry<Pose2d> turretEntry;
 
   final DoubleEntry turretAngle;
 
@@ -67,16 +67,13 @@ public class Robot extends LoggedRobot {
 
     robotContainer = new RobotContainer();
 
+
     Logger.start();
+
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
     table = inst.getTable("blud");
-
-    turretEntry = inst.getStructTopic("/blud/turretPose", Pose2d.struct).getEntry(
-      robotContainer.shooter.turret.turretPose,
-      PubSubOption.keepDuplicates(true)
-    );
 
     poseEntry = inst.getStructTopic("/blud/estimatedPose", Pose2d.struct).getEntry(
       RobotState.getInstance().getPose(), 
@@ -97,6 +94,12 @@ public class Robot extends LoggedRobot {
       robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds),
       PubSubOption.keepDuplicates(true)
     );
+
+    turretEntry = inst.getStructTopic("/blud/turretPose", Pose2d.struct).getEntry(
+      robotContainer.shooter.turret.turretPose,
+      PubSubOption.keepDuplicates(true)
+    );
+
 
     turretDesiredAngle = inst.getDoubleTopic("/blud/turretDesiredAngle").getEntry(
       robotContainer.shooter.turret.desiredRotation.getDegrees(),
@@ -130,8 +133,22 @@ public class Robot extends LoggedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
+
+
     poseEntry.set(
       RobotState.getInstance().getPose()
+    );
+
+    states.set(
+      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds)
+    );
+
+    real.set(
+      robotContainer.drive.getModuleStates()
+    );
+
+    chassisEntry.set(
+      robotContainer.drive.chassisSpeeds
     );
 
     turretEntry.set(
@@ -146,17 +163,7 @@ public class Robot extends LoggedRobot {
       robotContainer.shooter.turret.inputs.currentRotation.getDegrees()
     );
 
-    states.set(
-      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds)
-    );
 
-    real.set(
-      robotContainer.drive.getModuleStates()
-    );
-
-    chassisEntry.set(
-      robotContainer.drive.chassisSpeeds
-    );
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

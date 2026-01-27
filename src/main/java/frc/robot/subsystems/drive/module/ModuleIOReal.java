@@ -20,8 +20,9 @@ public class ModuleIOReal implements ModuleIO {
 
     public int moduleNumber;
 
-    public ModuleIOReal(int moduleNumber)
+    public ModuleIOReal(double canID, int moduleNumber)
     {
+
         this.moduleNumber = moduleNumber;
     }
 

@@ -1,5 +1,9 @@
 package frc.robot.subsystems.shooter.Turret;
 
+import java.util.function.DoubleSupplier;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,15 +12,20 @@ import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotState;
+import frc.robot.LimelightHelpers.RawFiducial;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import frc.robot.subsystems.shooter.Turret.TurretIO.TurretIOInputs;
 import frc.robot.subsystems.vision.*;
 
 public class Turret {
     
-    // brings things into existence. Is God
+
+    @AutoLogOutput(key = "poo/turretPose")
     public Pose2d turretPose;
 
     public PIDController turretPID;
@@ -55,7 +64,6 @@ public class Turret {
         (
             (rotation
             .minus(RobotState.getInstance().getRotation())
-            .rotateBy(new Rotation2d(Math.toRadians(90)))
             .getDegrees()
             % Constants.turretLimit)
         );
@@ -77,26 +85,42 @@ public class Turret {
             RobotState.getInstance().getPose().getTranslation()
             .minus(Constants.FieldConstants.getHub().getTranslation());
 
-        double y = RobotState.getInstance().getPose().getY() - Constants.FieldConstants.getHub().getY();
+        double y = RobotState.getInstance().getPose().getY() - Constants.FieldConstants.getHub().getY();//- 4.034;
         double x = RobotState.getInstance().getPose().getX() - Constants.FieldConstants.getHub().getX();
-        double hypotenuse = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));
+        // hypotenuse = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2)) * Math.signum(y);
 
-        double angle = Math.asin(
-          x / hypotenuse
-        );
 
-        return new Rotation2d(angle);
+       // Rotation2d angle = new Rotation2d(Math.asin(
+       //   x / hypotenuse
+       // ));
+
+        Rotation2d angle = new Rotation2d(Math.atan(
+            y / x
+        ));
+
+        if (x > 0) angle = angle.plus(new Rotation2d(Math.PI));
+        
+
+
+        return angle;
     }
 
     public Rotation2d visionAutoalign()
     {
-    
-        return null;
+        double x = LimelightHelpers.getTX(Constants.camName);
+        return new Rotation2d(turretIO.getRotation().getDegrees() + x);
     }
 
     public void autoalign()
     {
-        setDesiredRotation(odometryAutoalign());
+        if (LimelightHelpers.getTV(Constants.camName))
+        {
+            setDesiredRotation(visionAutoalign());
+        }
+        else
+        {
+            setDesiredRotation(odometryAutoalign());
+        }
     }
 
     public void update(Timer timer)
@@ -132,5 +156,8 @@ public class Turret {
         );
 
     }
+
+        
+
 
 }

@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,7 +31,7 @@ public class Drive extends SubsystemBase {
 
     public SwerveDriveSimulation driveSim;
 
-    public SwerveDriveOdometry odometry;
+   // public SwerveDriveOdometry odometry;
 
     public GyroIO gyroIO;
 
@@ -91,10 +90,8 @@ public class Drive extends SubsystemBase {
             Constants.brLocation
         );
 
-        odometry = new SwerveDriveOdometry
-        (
-            kinematics, 
-            gyroIO.getHeading(), 
+
+        RobotState.getInstance().setup(kinematics, gyroIO,             
             new SwerveModulePosition[] 
             {
                 flModule.getPosition(),
@@ -107,21 +104,6 @@ public class Drive extends SubsystemBase {
     }
 
 
-    public Pose2d getOdomPose()
-    {
-        odometry.update(
-            gyroIO.getHeading(), 
-            new SwerveModulePosition[] 
-            {
-                flModule.getPosition(),
-                frModule.getPosition(),
-                blModule.getPosition(),
-                brModule.getPosition()
-            }
-        );
-
-        return odometry.getPoseMeters();
-    }
 
     public void updateModuleStates()
     {
@@ -154,7 +136,13 @@ public class Drive extends SubsystemBase {
     public void periodic()
     {
         //RobotState.getInstance().setPose(getOdomPose());
-        RobotState.getInstance().update(new Rotation3d(gyroIO.getHeading()), modulePositions);
+
+        for (int i = 0; i <= 3; i++)
+        {
+            modulePositions[i] = modules[i].getPosition();
+        }
+
+        RobotState.getInstance().update(gyroIO.getHeading(), modulePositions);
 
         updateModuleStates();
 
