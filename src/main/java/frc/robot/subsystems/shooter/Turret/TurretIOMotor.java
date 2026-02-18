@@ -45,7 +45,7 @@ public class TurretIOMotor implements TurretIO {
         motor = new SparkMax(Constants.turretID, MotorType.kBrushless);
 
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        motor2 = new SparkMax(Constants.turretID2, MotorType.kBrushless);
+        //motor2 = new SparkMax(Constants.turretID2, MotorType.kBrushless);
 
 
 

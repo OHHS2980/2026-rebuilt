@@ -26,7 +26,6 @@ import edu.wpi.first.networktables.StructArrayEntry;
 import edu.wpi.first.networktables.StructEntry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.shooter.Turret.Turret;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -50,12 +49,6 @@ public class Robot extends LoggedRobot {
 
   final StructArrayEntry<SwerveModuleState> real;
   
-
-  final StructEntry<Pose2d> turretEntry;
-
-  final DoubleEntry turretAngle;
-
-  final DoubleEntry turretDesiredAngle;
 
 
 
@@ -95,21 +88,7 @@ public class Robot extends LoggedRobot {
       PubSubOption.keepDuplicates(true)
     );
 
-    turretEntry = inst.getStructTopic("/blud/turretPose", Pose2d.struct).getEntry(
-      robotContainer.shooter.turret.turretPose,
-      PubSubOption.keepDuplicates(true)
-    );
 
-
-    turretDesiredAngle = inst.getDoubleTopic("/blud/turretDesiredAngle").getEntry(
-      robotContainer.shooter.turret.desiredRotation.getDegrees(),
-      PubSubOption.keepDuplicates(true)
-    );
-
-    turretAngle = inst.getDoubleTopic("/blud/turretAngle").getEntry(
-      robotContainer.shooter.turret.inputs.currentRotation.getDegrees(),
-      PubSubOption.keepDuplicates(true)
-    );
 
     robotState = RobotState.getInstance();
 
@@ -151,17 +130,7 @@ public class Robot extends LoggedRobot {
       robotContainer.drive.chassisSpeeds
     );
 
-    turretEntry.set(
-      robotContainer.shooter.turret.turretPose
-    );
 
-    turretDesiredAngle.set(
-      robotContainer.shooter.turret.desiredRotation.getDegrees()
-    );
-
-    turretAngle.set(
-      robotContainer.shooter.turret.inputs.currentRotation.getDegrees()
-    );
 
 
   }
